@@ -1,8 +1,7 @@
-float x = 240;
-float y = 0;
-float speed = 0;
-float yspeed = 0;
-float xspeed = 0;
+float x = 240; //x position of the player
+float y = 0; //y position of the player
+float ythrust = 0;
+float xthrust = 0;
 float gravity = 0.1;  
 float thrust = .2;
 float rotate = 0;
@@ -44,6 +43,7 @@ void draw() {
   pushMatrix();
   translate(x+5, y+5);
   rotate(rotate);
+  //Starting position of the rocket
   rect(-5, -5, 10, 10);
   popMatrix();
   //rotate*1/(2(PI)) = degrees
@@ -51,29 +51,24 @@ void draw() {
   for (int i = 0; i < points.size(); i++) {
     ellipse(points.get(i).x, points.get(i).y, 10, 10);
   }
-  speed += gravity;
-  y += speed;
+  
+  y += ythrust;
+  ythrust += gravity;
   
   if (keyPressed == true && key == 'w') {
     
-    yspeed = speed*sin(rotate);
-    xspeed = speed*cos(rotate);
-    //speed += 2*gravity;
-    speed -= thrust;
+    ythrust = ythrust*sin(rotate);
+    xthrust = xthrust*cos(rotate);
+    x += xthrust;
+    y -= ythrust;
     
   } if (keyPressed == true && key == 'a') {
 
-    /*translate(width/2, height/2);
-    rotate(PI/0.5);
-    rect(-26, -26, 52, 52);*/
     willRotate = true;
     rotate -= 0.05;
     
   } if (keyPressed == true && key == 'd') {
 
-    /*translate(width/2, height/2);
-    rotate(PI/0.5);
-    rect(-26, -26, 52, 52);*/
     willRotate = true;
     rotate += 0.05;
     
