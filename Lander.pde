@@ -1,9 +1,9 @@
 float x = 240; //x position of the player
 float y = 80; //y position of the player 
 float ythrust = 0;
-float ythrustCoefficient = 0.2;
+float ythrustCoefficient = 1;
 float xthrust = 0;
-float xthrustCoefficient = 0.2;
+float xthrustCoefficient = 1;
 float gravity = 0.1;  
 float gravityCoefficient = 0.1;
 float thrust = .2;
@@ -54,38 +54,39 @@ void draw() {
   for (int i = 0; i < points.size(); i++) {
     ellipse(points.get(i).x, points.get(i).y, 10, 10);
   }
-  
+
   gravity += gravityCoefficient;
   y += gravity;
   println("5*cos: " + 5*cos(rotate) + ", 5*sin: " + 5*sin(rotate));
+  
+  if (gravity == 0.6) {
+    gravity = 0.6;
+  }
+  
   if (keyPressed == true && key == 'w') {
-    
-    ythrustCoefficient = 0.1;
-    xthrustCoefficient = 0.1;
-    
-    ythrustCoefficient += 0.2;
-    xthrustCoefficient += 0.2;
-    ythrust = ythrustCoefficient*cos(rotate);
-    xthrust = xthrustCoefficient*sin(rotate);
+    //ythrustCoefficient += 0.15;
+    //xthrustCoefficient += 0.15;
+    ythrust *= -cos(rotate);
+    xthrust *= -sin(rotate);
     x += xthrust;
     y -= ythrust;
-    gravityCoefficient = 0;
-    
-  } if (keyPressed == true && key == 'a') {
-
+    print("(" + xthrust + ", " + ythrust + ")");
+  }
+  if (keyPressed == true && key == 'a') {
     willRotate = true;
     rotate -= 0.05;
-    
-  } if (keyPressed == true && key == 'd') {
-
+  } 
+  if (keyPressed == true && key == 'd') {
     willRotate = true;
     rotate += 0.05;
-    
-  } if (key != 'w') {
-    ythrustCoefficient = 0;
-    xthrustCoefficient = 0;
-    ythrust = 0;
-    xthrust = 0;
+  } 
+  if (key != 'w') {
+    xthrustCoefficient -= 0.1;
+    if(ythrust > 0) {
+      ythrust -= 0.1;
+    } if(xthrust > 0) {
+      xthrust -= 0.1;
+    }
   }
   if (y > height) { // <- Here, I will check for collision
     y=height;
