@@ -1,12 +1,13 @@
 float x = 240; //x position of the player
 float y = 80; //y position of the player 
-float ythrust = 0;
-float ythrustCoefficient = 1;
-float xthrust = 0;
-float xthrustCoefficient = 1;
-float gravity = 0.1;  
-float gravityCoefficient = 0.1;
-float thrust = .2;
+float ythrust = 0; //the thrust in the y direction
+float ythrustCoefficient = 1; // ? \\
+float xthrust = 0; //the thrust in the x direction
+float xthrustCoefficient = 1; // ? \\
+float gravity = 0.1; //gravity affecting the player's bot
+float gravityCoefficient = 0.1; // ? \\
+float velocity = 0;
+float velocityCoefficient = 0.2;
 float rotate = 0;
 float degrees;
 
@@ -59,15 +60,15 @@ void draw() {
   y += gravity;
   println("5*cos: " + 5*cos(rotate) + ", 5*sin: " + 5*sin(rotate));
   
-  if (gravity == 0.6) {
-    gravity = 0.6;
+  if (gravity >= 6) {
+    gravity = 6;
   }
   
   if (keyPressed == true && key == 'w') {
-    //ythrustCoefficient += 0.15;
-    //xthrustCoefficient += 0.15;
-    ythrust *= -cos(rotate);
-    xthrust *= -sin(rotate);
+    //ythrust += ythrustCoefficient;
+    //xthrust += xthrustCoefficient;
+    ythrust += cos(rotate);
+    xthrust += sin(rotate);
     x += xthrust;
     y -= ythrust;
     print("(" + xthrust + ", " + ythrust + ")");
