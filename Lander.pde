@@ -2,9 +2,9 @@
 float x = 240; //x position of the player
 float y = 80; //y position of the player 
 float ythrust = 0; //the thrust in the y direction
-float ythrustCoefficient = 1; // ? \\
+float ythrustCoefficient = 0.25; // ? \\
 float xthrust = 0; //the thrust in the x direction
-float xthrustCoefficient = 1; // ? \\
+float xthrustCoefficient = 0.25; // ? \\
 float gravity = 0.1; //gravity affecting the player's bot
 float gravityCoefficient = 0.1; // ? \\
 float velocity = 0; //the speed of acceleration
@@ -59,26 +59,30 @@ void draw() {
   gravity += gravityCoefficient;
   y += gravity;
   println("5*cos: " + 5*cos(rotate) + ", 5*sin: " + 5*sin(rotate));
-
-  if (gravity >= 10) {
-    gravity = 10;
-  }
+  float Gincrementer = 6.5;
+  if (gravity >= Gincrementer) {
+    gravity = Gincrementer;
+  } //note to self: a 1.75:1 ratio of thrust to gravity is a nice combo
+  float incrementer = Gincrementer*1.75;
+  if (ythrust >= incrementer) {
+    ythrust = incrementer;
+  } 
   y -= ythrust;
+  x += xthrust;
   if (keyPressed == true && key == 'w') {
     //ythrust += ythrustCoefficient;
     //xthrust += xthrustCoefficient;
-    ythrust -= cos(rotate)*ythrustCoefficient;
-    xthrust -= sin(rotate);
-    x += xthrust;
+    ythrust += (cos(rotate)*ythrustCoefficient);
+    xthrust -= (sin(rotate)*xthrustCoefficient);
     print("(" + xthrust + ", " + ythrust + ")");
   } else {
-    xthrustCoefficient -= 0.1;
+    //xthrustCoefficient -= 0.1;
     if (ythrust > 0) {
       ythrust -= 0.1;
     } 
-    if (xthrust > 0) {
-      xthrust -= 0.1;
-    }
+    /*if (xthrust > 0) {
+     xthrust -= 0.1;
+     }*/
   }
   if (keyPressed == true && key == 'a') {
     willRotate = true;
@@ -88,16 +92,16 @@ void draw() {
     willRotate = true;
     rotate += 0.05;
   }
-  if (y > height) { // <- Here, I will check for collision
-    y=height-40;
+  if (y >= height-10) { // <- Here, I will check for collision
+    y=height-10;
   }
-  if (x > width) {
-    x= width;
+  if (x >= width-10) {
+    x= width-10;
   }
-  if (x<0) {
+  if (x<=0) {
     x=0;
   }
-  if (y<0) {
+  if (y<=0) {
     y=0;
   }
   fill(0, 255, 0);
@@ -106,11 +110,6 @@ void draw() {
     if (x+10<=landingPad.get(i).x && x+10<=landingPad.get(i).x+50 && y+10<=landingPad.get(i).y && y+10 >= landingPad.get(i).y+10) {
       y=landingPad.get(i).y;
     }
-  }
-}
-void keyReleased() {
-  if (key == 'w') {
-    gravity = 1;
   }
 }
 class Point {
