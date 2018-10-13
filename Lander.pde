@@ -1,3 +1,4 @@
+
 float x = 240; //x position of the player
 float y = 80; //y position of the player 
 float ythrust = 0; //the thrust in the y direction
@@ -6,25 +7,24 @@ float xthrust = 0; //the thrust in the x direction
 float xthrustCoefficient = 1; // ? \\
 float gravity = 0.1; //gravity affecting the player's bot
 float gravityCoefficient = 0.1; // ? \\
-float velocity = 0;
-float velocityCoefficient = 0.2;
-float rotate = 0;
-float degrees;
+float velocity = 0; //the speed of acceleration
+float velocityCoefficient = 0.2; // ? \\
+float rotate = 0; //placeholder of how much the robot rotates
+float degrees; //the amount of degrees to rotate
 
-int xi = 0;
-int randY = (int) random(0, height-10);
-int randX = (int) random(0, width-10);
-int rand1 = (int) random(0, 255);
-int rand2 = (int) random(0, 255);
-int rand3 = (int) random(0, 255);
-int rand4 = (int) random(0, 255);
-int rand5 = (int) random(0, 255);
-int rand6 = (int) random(0, 255);
+int randY = (int) random(0, height-10); //controls the y values of the obstacles & landing pad
+int randX = (int) random(0, width-10); //controls the x values of the obstacles & landing pad
+int rand1 = (int) random(0, 255); //partially controls the colors of the obstacles
+int rand2 = (int) random(0, 255); //partially controls the colors of the obstacles
+int rand3 = (int) random(0, 255); //partially controls the colors of the obstacles
+int rand4 = (int) random(0, 255); //partially controls the colors of the obstacles
+int rand5 = (int) random(0, 255); //partially controls the colors of the obstacles
+int rand6 = (int) random(0, 255); //partially controls the colors of the obstacles
 
-boolean willRotate = false;
+boolean willRotate = false; //determines if the player will rotate
 
-ArrayList <Point> points = new ArrayList<Point>();
-ArrayList <LandingPad> landingPad = new ArrayList<LandingPad>();
+ArrayList <Point> points = new ArrayList<Point>(); //controls how many obstacles there are and their positions
+ArrayList <LandingPad> landingPad = new ArrayList<LandingPad>(); //controls the position of the landing pad
 
 void setup() {
   size(480, 270);
@@ -59,19 +59,26 @@ void draw() {
   gravity += gravityCoefficient;
   y += gravity;
   println("5*cos: " + 5*cos(rotate) + ", 5*sin: " + 5*sin(rotate));
-  
-  if (gravity >= 6) {
-    gravity = 6;
+
+  if (gravity >= 10) {
+    gravity = 10;
   }
-  
+  y -= ythrust;
   if (keyPressed == true && key == 'w') {
     //ythrust += ythrustCoefficient;
     //xthrust += xthrustCoefficient;
-    ythrust += cos(rotate);
-    xthrust += sin(rotate);
+    ythrust -= cos(rotate)*ythrustCoefficient;
+    xthrust -= sin(rotate);
     x += xthrust;
-    y -= ythrust;
     print("(" + xthrust + ", " + ythrust + ")");
+  } else {
+    xthrustCoefficient -= 0.1;
+    if (ythrust > 0) {
+      ythrust -= 0.1;
+    } 
+    if (xthrust > 0) {
+      xthrust -= 0.1;
+    }
   }
   if (keyPressed == true && key == 'a') {
     willRotate = true;
@@ -80,17 +87,18 @@ void draw() {
   if (keyPressed == true && key == 'd') {
     willRotate = true;
     rotate += 0.05;
-  } 
-  if (key != 'w') {
-    xthrustCoefficient -= 0.1;
-    if(ythrust > 0) {
-      ythrust -= 0.1;
-    } if(xthrust > 0) {
-      xthrust -= 0.1;
-    }
   }
   if (y > height) { // <- Here, I will check for collision
-    y=height;
+    y=height-40;
+  }
+  if (x > width) {
+    x= width;
+  }
+  if (x<0) {
+    x=0;
+  }
+  if (y<0) {
+    y=0;
   }
   fill(0, 255, 0);
   for (int i = 0; i < 1; i += (int) random(0, 5)) {
@@ -98,6 +106,11 @@ void draw() {
     if (x+10<=landingPad.get(i).x && x+10<=landingPad.get(i).x+50 && y+10<=landingPad.get(i).y && y+10 >= landingPad.get(i).y+10) {
       y=landingPad.get(i).y;
     }
+  }
+}
+void keyReleased() {
+  if (key == 'w') {
+    gravity = 1;
   }
 }
 class Point {
