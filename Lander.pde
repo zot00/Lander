@@ -1,4 +1,3 @@
-
 float x = 240; //x position of the player
 float y = 80; //y position of the player 
 float ythrust = 0; //the thrust in the y direction
@@ -11,6 +10,7 @@ float velocity = 0; //the speed of acceleration
 float velocityCoefficient = 0.2; // ? \\
 float rotate = 0; //placeholder of how much the robot rotates
 float degrees; //the amount of degrees to rotate
+float airResistance = 0; //Resistance for the bot in the x direction
 
 int randY = (int) random(0, height-10); //controls the y values of the obstacles & landing pad
 int randX = (int) random(0, width-10); //controls the x values of the obstacles & landing pad
@@ -69,17 +69,22 @@ void draw() {
   } 
   y -= ythrust;
   x += xthrust;
+  if (xthrust > 0) {
+    xthrust -= xthrust/65;
+  } else if (xthrust < 0) {
+    xthrust += -xthrust/65;
+  }
   if (keyPressed == true && key == 'w') {
     //ythrust += ythrustCoefficient;
     //xthrust += xthrustCoefficient;
     ythrust += (cos(rotate)*ythrustCoefficient);
-    xthrust -= (sin(rotate)*xthrustCoefficient);
+    xthrust += (sin(rotate)*xthrustCoefficient);
     print("(" + xthrust + ", " + ythrust + ")");
   } else {
     //xthrustCoefficient -= 0.1;
     if (ythrust > 0) {
       ythrust -= 0.1;
-    } 
+    }
     /*if (xthrust > 0) {
      xthrust -= 0.1;
      }*/
@@ -93,16 +98,26 @@ void draw() {
     rotate += 0.05;
   }
   if (y >= height-10) { // <- Here, I will check for collision
-    y=height-10;
+    x = width/2;
+    y = 20;
   }
   if (x >= width-10) {
-    x= width-10;
+    x = width/2;
+    y = 20;
   }
-  if (x<=0) {
-    x=0;
+  if (x <= 0) {
+    x = width/2;
+    y = 20;
   }
-  if (y<=0) {
-    y=0;
+  if (y <= 0) {
+    x = width/2;
+    y = 20;
+  }
+  for(int i = 0; i < points.size(); i++) {
+    if(x >= points.get(i).x - 5 && x <= points.get(i).x + 5 && y >= points.get(i).y - 5 && y <= points.get(i).y + 5){
+      x = width/2;
+      y = 20;
+    }
   }
   fill(0, 255, 0);
   for (int i = 0; i < 1; i += (int) random(0, 5)) {
