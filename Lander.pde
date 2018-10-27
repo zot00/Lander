@@ -114,7 +114,7 @@ void draw() {
     y = 20;
   }
   for(int i = 0; i < points.size(); i++) {
-    if(x >= points.get(i).x - 5 && x <= points.get(i).x + 5 && y >= points.get(i).y - 5 && y <= points.get(i).y + 5){
+    if(x+5 >= points.get(i).x - 5 && x+5 <= points.get(i).x + 5 && y+5 >= points.get(i).y - 5 && y+5 <= points.get(i).y + 5){
       x = width/2;
       y = 20;
     }
@@ -122,8 +122,13 @@ void draw() {
   fill(0, 255, 0);
   for (int i = 0; i < 1; i += (int) random(0, 5)) {
     rect(landingPad.get(i).x, landingPad.get(i).y, 50, 10);
-    if (x+10<=landingPad.get(i).x && x+10<=landingPad.get(i).x+50 && y+10<=landingPad.get(i).y && y+10 >= landingPad.get(i).y+10) {
-      y=landingPad.get(i).y;
+    //if(x+w>lp.x && x+w<lp.x+lp.w && y+h>lp.y && y<lp.y+lp.h) {
+      //x=lp.x-w;
+    //}
+    if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50) {
+        
+    } else if(y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y+10) {
+        
     }
   }
 }
