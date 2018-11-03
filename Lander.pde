@@ -22,13 +22,15 @@ int rand5 = (int) random(0, 255); //partially controls the colors of the obstacl
 int rand6 = (int) random(0, 255); //partially controls the colors of the obstacles
 
 boolean willRotate = false; //determines if the player will rotate
+boolean isLanded = false; //determines if the player is landed
 
 ArrayList <Point> points = new ArrayList<Point>(); //controls how many obstacles there are and their positions
 ArrayList <LandingPad> landingPad = new ArrayList<LandingPad>(); //controls the position of the landing pad
 
 void setup() {
-  size(480, 270);
-  for (int i = 0; i <= random(0, 50); i++) {
+  fullScreen();
+  //size(480, 270);
+  for (int i = 0; i <= random(0, 5000); i++) {
     randY = (int) random(0, height-10);
     randX = (int) random(0, width-10);
     points.add(new Point(randX, randY));
@@ -38,10 +40,10 @@ void setup() {
     randX = (int) random(0, width-50);
     landingPad.add(new LandingPad(randX, randY));
   }
+  background(0);
 }
 
 void draw() {
-  background(255);
   fill(175);
   stroke(0);
   pushMatrix();
@@ -55,9 +57,6 @@ void draw() {
   for (int i = 0; i < points.size(); i++) {
     ellipse(points.get(i).x, points.get(i).y, 10, 10);
   }
-
-  gravity += gravityCoefficient;
-  y += gravity;
   println("5*cos: " + 5*cos(rotate) + ", 5*sin: " + 5*sin(rotate));
   float Gincrementer = 6.5;
   if (gravity >= Gincrementer) {
@@ -66,15 +65,19 @@ void draw() {
   float incrementer = Gincrementer*1.75;
   if (ythrust >= incrementer) {
     ythrust = incrementer;
-  } 
-  y -= ythrust;
-  x += xthrust;
+  }
+  if (isLanded == false) {
+    gravity += gravityCoefficient;
+    y += gravity;
+    y -= ythrust;
+    x += xthrust;
+  }
   if (xthrust > 0) {
     xthrust -= xthrust/65;
   } else if (xthrust < 0) {
     xthrust += -xthrust/65;
   }
-  if (keyPressed == true && key == 'w') {
+  if (keyPressed == true && key == 'w' && isLanded == false) {
     //ythrust += ythrustCoefficient;
     //xthrust += xthrustCoefficient;
     ythrust += (cos(rotate)*ythrustCoefficient);
@@ -89,11 +92,11 @@ void draw() {
      xthrust -= 0.1;
      }*/
   }
-  if (keyPressed == true && key == 'a') {
+  if (keyPressed == true && key == 'a' && isLanded == false) {
     willRotate = true;
     rotate -= 0.05;
   } 
-  if (keyPressed == true && key == 'd') {
+  if (keyPressed == true && key == 'd' && isLanded == false) {
     willRotate = true;
     rotate += 0.05;
   }
@@ -113,8 +116,8 @@ void draw() {
     x = width/2;
     y = 20;
   }
-  for(int i = 0; i < points.size(); i++) {
-    if(x+5 >= points.get(i).x - 5 && x+5 <= points.get(i).x + 5 && y+5 >= points.get(i).y - 5 && y+5 <= points.get(i).y + 5){
+  for (int i = 0; i < points.size(); i++) {
+    if (x+5 >= points.get(i).x - 5 && x+5 <= points.get(i).x + 5 && y+5 >= points.get(i).y - 5 && y+5 <= points.get(i).y + 5) {
       x = width/2;
       y = 20;
     }
@@ -123,12 +126,14 @@ void draw() {
   for (int i = 0; i < 1; i += (int) random(0, 5)) {
     rect(landingPad.get(i).x, landingPad.get(i).y, 50, 10);
     //if(x+w>lp.x && x+w<lp.x+lp.w && y+h>lp.y && y<lp.y+lp.h) {
-      //x=lp.x-w;
+    //x=lp.x-w;
     //}
-    if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50) {
-        
-    } else if(y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y+10) {
-        
+    if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y) {
+      isLanded = true;
+      willRotate = false;
+    } else if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y+10) {
+      x = width/2;
+      y = 20;
     }
   }
 }
