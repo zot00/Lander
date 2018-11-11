@@ -20,6 +20,7 @@ int rand3 = (int) random(0, 255); //partially controls the colors of the obstacl
 int rand4 = (int) random(0, 255); //partially controls the colors of the obstacles
 int rand5 = (int) random(0, 255); //partially controls the colors of the obstacles
 int rand6 = (int) random(0, 255); //partially controls the colors of the obstacles
+int trailCount = 0;
 
 boolean willRotate = false; //determines if the player will rotate
 boolean isLanded = false; //determines if the player is landed
@@ -31,8 +32,8 @@ void setup() {
   fullScreen();
   //size(480, 270);
   for (int i = 0; i <= random(0, 5000); i++) {
-    randY = (int) random(0, height-10);
-    randX = (int) random(0, width-10);
+    randY = (int) random(10, height-10);
+    randX = (int) random(10, width-10);
     points.add(new Point(randX, randY));
   }
   for (int i = 0; i <= 1; i += (int) random(0, 5)) {
@@ -44,8 +45,13 @@ void setup() {
 }
 
 void draw() {
-  fill(175);
-  stroke(0);
+  if(frameCount%2==0){
+    trailCount+=1;
+  }
+  for (int i = 0; i<trailCount; i++) {
+    fill(i%255, frameCount%255, 100);
+  }
+  strokeWeight(0);
   pushMatrix();
   translate(x+5, y+5);
   rotate(rotate);
