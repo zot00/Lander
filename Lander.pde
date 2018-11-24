@@ -27,6 +27,7 @@ boolean isLanded = false; //determines if the player is landed
 
 ArrayList <Point> points = new ArrayList<Point>(); //controls how many obstacles there are and their positions
 ArrayList <LandingPad> landingPad = new ArrayList<LandingPad>(); //controls the position of the landing pad
+ArrayList <Trail> trail = new ArrayList<Trail>();
 
 void setup() {
   fullScreen();
@@ -41,11 +42,11 @@ void setup() {
     randX = (int) random(0, width-50);
     landingPad.add(new LandingPad(randX, randY));
   }
-  background(0);
 }
 
 void draw() {
-  if(frameCount%2==0){
+  background(0);
+  if (frameCount%2==0) {
     trailCount+=1;
   }
   for (int i = 0; i<trailCount; i++) {
@@ -134,13 +135,31 @@ void draw() {
     //if(x+w>lp.x && x+w<lp.x+lp.w && y+h>lp.y && y<lp.y+lp.h) {
     //x=lp.x-w;
     //}
-    if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y) {
+    //x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y
+    if (Collision((int) x, (int) y, (int) landingPad.get(i).x, (int) landingPad.get(i).y, 10, 10, 100, 10) == true) {
       isLanded = true;
       willRotate = false;
     } else if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y+10) {
       x = width/2;
       y = 20;
     }
+  }
+  
+  trail.add(new Trail((int) this.x, (int) this.y));
+}
+boolean Collision(int x1, int y1, int x2, int y2, int sx1, int sy1, int sx2, int sy2) {
+  //x1 - The x position of object 1
+  //y1 - the y position of object 1
+  //x2 - the x position of object 2
+  //y2 - the y position of object 2
+  //sx1 - the width of object 1
+  //sy1 - the height of object 1
+  //sx2 - the width of object 2
+  //sy2 - the height of object 2
+  if(x1 + sx1/2 > x2 && x - sx1/2 < x2 + sx2/2 && y1 + sy1/2 > y2 && y - sy1/2 < y2 + sy2/2) {
+    return true;
+  } else {
+    return false;
   }
 }
 class Point {
@@ -159,5 +178,14 @@ class LandingPad {
   LandingPad(int x, int y) {
     this.x = x;
     this.y = y;
+  }
+}
+class Trail {
+  int x;
+  int y;
+  
+  Trail(int x, int y) {
+    this.x=x;
+    this.y=y;
   }
 }
