@@ -108,25 +108,20 @@ void draw() {
     rotate += 0.05;
   }
   if (y >= height-10) { // <- Here, I will check for collision
-    x = width/2;
-    y = 20;
+    KillPlayer();
   }
   if (x >= width-10) {
-    x = width/2;
-    y = 20;
+    KillPlayer();
   }
   if (x <= 0) {
-    x = width/2;
-    y = 20;
+    KillPlayer();
   }
   if (y <= 0) {
-    x = width/2;
-    y = 20;
+    KillPlayer();
   }
   for (int i = 0; i < points.size(); i++) {
     if (x+5 >= points.get(i).x - 5 && x+5 <= points.get(i).x + 5 && y+5 >= points.get(i).y - 5 && y+5 <= points.get(i).y + 5) {
-      x = width/2;
-      y = 20;
+      KillPlayer();
     }
   }
   fill(0, 255, 0);
@@ -139,13 +134,27 @@ void draw() {
     if (Collision((int) x, (int) y, (int) landingPad.get(i).x, (int) landingPad.get(i).y, 10, 10, 100, 10) == true) {
       isLanded = true;
       willRotate = false;
+      trail = new ArrayList<Trail>();
     } else if (x+5 > landingPad.get(i).x && x-5 < landingPad.get(i).x+50 && y+5 > landingPad.get(i).y && y-5 < landingPad.get(i).y+10) {
-      x = width/2;
-      y = 20;
+      KillPlayer();
     }
   }
-  
+
   trail.add(new Trail((int) this.x, (int) this.y));
+  if (trail.size() > 300) {
+    trail.remove(0);
+  }
+  for (int i = 0; i < trail.size(); i++) {
+    fill(i%255, frameCount%255, 100);
+    rect(trail.get(i).x, trail.get(i).y, 10, 10);
+  }
+  if (trail.size()>100) {
+    for (int i = 0; i < trail.size()-10; i++) {
+      if (Collision((int) x, (int) y, trail.get(i).x, trail.get(i).y, 10, 10, 10, 10)) {
+        KillPlayer();
+      }
+    }
+  }
 }
 boolean Collision(int x1, int y1, int x2, int y2, int sx1, int sy1, int sx2, int sy2) {
   //x1 - The x position of object 1
@@ -156,11 +165,22 @@ boolean Collision(int x1, int y1, int x2, int y2, int sx1, int sy1, int sx2, int
   //sy1 - the height of object 1
   //sx2 - the width of object 2
   //sy2 - the height of object 2
-  if(x1 + sx1/2 > x2 && x - sx1/2 < x2 + sx2/2 && y1 + sy1/2 > y2 && y - sy1/2 < y2 + sy2/2) {
+  if (x1 + sx1/2 > x2 && x - sx1/2 < x2 + sx2/2 && y1 + sy1/2 > y2 && y - sy1/2 < y2 + sy2/2) {
     return true;
   } else {
     return false;
   }
+}
+void KillPlayer() {
+  /*gravity = 0;
+  ythrust = 0;
+  xthrust = 0;
+  ythrustCoefficient = 0;
+  xthrustCoefficient = 0;
+  gravityCoefficient = 0;*/
+  y = 20;
+  x = width/2;
+  trail = new ArrayList<Trail>();
 }
 class Point {
   int x;
@@ -183,7 +203,7 @@ class LandingPad {
 class Trail {
   int x;
   int y;
-  
+
   Trail(int x, int y) {
     this.x=x;
     this.y=y;
