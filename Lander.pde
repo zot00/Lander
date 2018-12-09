@@ -32,7 +32,7 @@ ArrayList <Trail> trail = new ArrayList<Trail>();
 void setup() {
   fullScreen();
   //size(480, 270);
-  for (int i = 0; i <= random(0, 5000); i++) {
+  for (int i = 0; i <= random(0, 50000); i++) {
     randY = (int) random(10, height-10);
     randX = (int) random(10, width-10);
     points.add(new Point(randX, randY));
@@ -57,7 +57,7 @@ void draw() {
   translate(x+5, y+5);
   rotate(rotate);
   //Starting position of the rocket
-  rect(-5, -5, 10, 10);
+  rect(-width/2, -5, 10, 10);
   popMatrix();
   //rotate*1/(2(PI)) = degrees
   fill(random(rand1, rand2), random(rand3, rand4), random(rand5, rand6));
